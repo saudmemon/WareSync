@@ -9,4 +9,6 @@ public class Supplier
     public string Email { get; set; } = string.Empty;
 
     public string Phone { get; set; } = string.Empty;
+
+    public List<Product> Products { get; set; } = new();
 }

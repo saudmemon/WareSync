@@ -14,7 +14,13 @@ public class Product
 
     public int Quantity { get; set; }
 
-    public string Category { get; set; } = string.Empty;
+    // Foreign Key
+    public int CategoryId { get; set; }
 
-    public string Supplier { get; set; } = string.Empty;
+    public Category? Category { get; set; }
+
+    // Foreign Key
+    public int SupplierId { get; set; }
+
+    public Supplier? Supplier { get; set; }
 }

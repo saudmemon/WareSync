@@ -15,8 +15,8 @@ public class ProductStore
             SKU = "KEY-001",
             Price = 8500,
             Quantity = 25,
-            Category = "Accessories",
-            Supplier = "Logitech"
+            CategoryId = 1,
+            SupplierId = 1
         },
         new Product
         {
@@ -26,8 +26,8 @@ public class ProductStore
             SKU = "MOU-001",
             Price = 3500,
             Quantity = 40,
-            Category = "Accessories",
-            Supplier = "Logitech"
+            CategoryId = 1,
+            SupplierId = 1
         }
     };
 
@@ -54,8 +54,8 @@ public class ProductStore
         existing.SKU = product.SKU;
         existing.Price = product.Price;
         existing.Quantity = product.Quantity;
-        existing.Category = product.Category;
-        existing.Supplier = product.Supplier;
+        existing.CategoryId = product.CategoryId;
+        existing.SupplierId = product.SupplierId;
 
         return true;
     }
