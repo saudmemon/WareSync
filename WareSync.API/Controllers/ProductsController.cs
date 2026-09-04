@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Mvc;
 using WareSync.API.DTOs;
 using WareSync.API.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WareSync.API.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[Authorize]
 public class ProductsController : ControllerBase
 {
     private readonly IProductService _productService;

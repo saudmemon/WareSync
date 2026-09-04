@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WareSync.API.Models;
+using WareSync.API.Authentication.Models;
 
 namespace WareSync.API.Data;
 
@@ -15,6 +16,7 @@ public class ApplicationDbContext : DbContext
     public DbSet<Category> Categories => Set<Category>();
 
     public DbSet<Supplier> Suppliers => Set<Supplier>();
+    public DbSet<User> Users => Set<User>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
