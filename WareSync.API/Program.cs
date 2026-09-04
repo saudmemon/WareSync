@@ -4,6 +4,8 @@ using WareSync.API.Interfaces;
 using WareSync.API.Services;
 using WareSync.API.Mappings;
 using WareSync.API.Middleware;
+using WareSync.API.Repositories;
+using WareSync.API.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,6 +17,12 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
+builder.Services.AddScoped<ISupplierRepository, SupplierRepository>();
 
 // Register Services as Scoped (Business Logic)
 builder.Services.AddScoped<IProductService, ProductService>();
