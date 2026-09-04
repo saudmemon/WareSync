@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using WareSync.API.Data;
 using WareSync.API.Interfaces;
 using WareSync.API.Services;
-using WareSync.API.Stores;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,11 +11,6 @@ builder.Services.AddControllers();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// Temporary: Register Stores until services are migrated to EF Core
-builder.Services.AddSingleton<ProductStore>();
-builder.Services.AddSingleton<CategoryStore>();
-builder.Services.AddSingleton<SupplierStore>();
 
 // Register Services as Scoped (Business Logic)
 builder.Services.AddScoped<IProductService, ProductService>();

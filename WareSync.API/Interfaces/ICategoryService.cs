@@ -1,16 +1,16 @@
-using WareSync.API.Models;
+using WareSync.API.DTOs;
 
 namespace WareSync.API.Interfaces;
 
 public interface ICategoryService
 {
-    List<Category> GetAllCategories();
+    Task<IEnumerable<CategoryDto>> GetAllAsync();
 
-    Category? GetCategoryById(int id);
+    Task<CategoryDto?> GetByIdAsync(int id);
 
-    void AddCategory(Category category);
+    Task<CategoryDto> CreateAsync(CreateCategoryDto dto);
 
-    bool UpdateCategory(Category category);
+    Task<bool> UpdateAsync(int id, UpdateCategoryDto dto);
 
-    bool DeleteCategory(int id);
+    Task<bool> DeleteAsync(int id);
 }

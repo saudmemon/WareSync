@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using WareSync.API.DTOs;
 using WareSync.API.Interfaces;
-using WareSync.API.Models;
 
 namespace WareSync.API.Controllers;
 
@@ -16,15 +16,15 @@ public class SuppliersController : ControllerBase
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public async Task<ActionResult<IEnumerable<SupplierDto>>> GetAll()
     {
-        return Ok(_supplierService.GetAllSuppliers());
+        return Ok(await _supplierService.GetAllAsync());
     }
 
-    [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
+    [HttpGet("{id}")]
+    public async Task<ActionResult<SupplierDto>> GetById(int id)
     {
-        var supplier = _supplierService.GetSupplierById(id);
+        var supplier = await _supplierService.GetByIdAsync(id);
 
         if (supplier == null)
             return NotFound();
@@ -33,21 +33,17 @@ public class SuppliersController : ControllerBase
     }
 
     [HttpPost]
-    public IActionResult Create(Supplier supplier)
+    public async Task<ActionResult<SupplierDto>> Create(CreateSupplierDto dto)
     {
-        _supplierService.AddSupplier(supplier);
+        var supplier = await _supplierService.CreateAsync(dto);
 
-        return CreatedAtAction(nameof(GetById),
-            new { id = supplier.Id }, supplier);
+        return CreatedAtAction(nameof(GetById), new { id = supplier.Id }, supplier);
     }
 
-    [HttpPut("{id:int}")]
-    public IActionResult Update(int id, Supplier supplier)
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(int id, UpdateSupplierDto dto)
     {
-        if (id != supplier.Id)
-            return BadRequest();
-
-        var updated = _supplierService.UpdateSupplier(supplier);
+        var updated = await _supplierService.UpdateAsync(id, dto);
 
         if (!updated)
             return NotFound();
@@ -55,10 +51,10 @@ public class SuppliersController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id)
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
     {
-        var deleted = _supplierService.DeleteSupplier(id);
+        var deleted = await _supplierService.DeleteAsync(id);
 
         if (!deleted)
             return NotFound();

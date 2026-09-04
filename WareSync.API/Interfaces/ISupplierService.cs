@@ -1,16 +1,16 @@
-using WareSync.API.Models;
+using WareSync.API.DTOs;
 
 namespace WareSync.API.Interfaces;
 
 public interface ISupplierService
 {
-    List<Supplier> GetAllSuppliers();
+    Task<IEnumerable<SupplierDto>> GetAllAsync();
 
-    Supplier? GetSupplierById(int id);
+    Task<SupplierDto?> GetByIdAsync(int id);
 
-    void AddSupplier(Supplier supplier);
+    Task<SupplierDto> CreateAsync(CreateSupplierDto dto);
 
-    bool UpdateSupplier(Supplier supplier);
+    Task<bool> UpdateAsync(int id, UpdateSupplierDto dto);
 
-    bool DeleteSupplier(int id);
+    Task<bool> DeleteAsync(int id);
 }

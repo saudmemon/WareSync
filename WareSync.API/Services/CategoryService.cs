@@ -1,30 +1,88 @@
+using Microsoft.EntityFrameworkCore;
+using WareSync.API.Data;
+using WareSync.API.DTOs;
 using WareSync.API.Interfaces;
 using WareSync.API.Models;
-using WareSync.API.Stores;
 
 namespace WareSync.API.Services;
 
 public class CategoryService : ICategoryService
 {
-    private readonly CategoryStore _categoryStore;
+    private readonly ApplicationDbContext _context;
 
-    public CategoryService(CategoryStore categoryStore)
+    public CategoryService(ApplicationDbContext context)
     {
-        _categoryStore = categoryStore;
+        _context = context;
     }
 
-    public List<Category> GetAllCategories()
-        => _categoryStore.GetAll();
+    public async Task<IEnumerable<CategoryDto>> GetAllAsync()
+    {
+        return await _context.Categories
+            .Select(c => new CategoryDto
+            {
+                Id = c.Id,
+                Name = c.Name
+            })
+            .ToListAsync();
+    }
 
-    public Category? GetCategoryById(int id)
-        => _categoryStore.GetById(id);
+    public async Task<CategoryDto?> GetByIdAsync(int id)
+    {
+        var category = await _context.Categories.FindAsync(id);
 
-    public void AddCategory(Category category)
-        => _categoryStore.Add(category);
+        if (category == null)
+            return null;
 
-    public bool UpdateCategory(Category category)
-        => _categoryStore.Update(category);
+        return new CategoryDto
+        {
+            Id = category.Id,
+            Name = category.Name
+        };
+    }
 
-    public bool DeleteCategory(int id)
-        => _categoryStore.Delete(id);
+    public async Task<CategoryDto> CreateAsync(CreateCategoryDto dto)
+    {
+        var category = new Category
+        {
+            Name = dto.Name
+        };
+
+        _context.Categories.Add(category);
+
+        await _context.SaveChangesAsync();
+
+        return new CategoryDto
+        {
+            Id = category.Id,
+            Name = category.Name
+        };
+    }
+
+    public async Task<bool> UpdateAsync(int id, UpdateCategoryDto dto)
+    {
+        var category = await _context.Categories.FindAsync(id);
+
+        if (category == null)
+            return false;
+
+        category.Name = dto.Name;
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
+
+    public async Task<bool> DeleteAsync(int id)
+    {
+        var category = await _context.Categories.FindAsync(id);
+
+        if (category == null)
+            return false;
+
+        _context.Categories.Remove(category);
+
+        await _context.SaveChangesAsync();
+
+        return true;
+    }
 }

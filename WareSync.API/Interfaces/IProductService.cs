@@ -1,16 +1,16 @@
-﻿using WareSync.API.Models;
+﻿using WareSync.API.DTOs;
 
 namespace WareSync.API.Interfaces;
 
 public interface IProductService
 {
-    List<Product> GetAllProducts();
+    Task<IEnumerable<ProductDto>> GetAllAsync();
 
-    Product? GetProductById(int id);
+    Task<ProductDto?> GetByIdAsync(int id);
 
-    void AddProduct(Product product);
+    Task<ProductDto> CreateAsync(CreateProductDto dto);
 
-    bool UpdateProduct(Product product);
+    Task<bool> UpdateAsync(int id, UpdateProductDto dto);
 
-    bool DeleteProduct(int id);
+    Task<bool> DeleteAsync(int id);
 }
