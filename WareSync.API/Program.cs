@@ -3,6 +3,7 @@ using WareSync.API.Data;
 using WareSync.API.Interfaces;
 using WareSync.API.Services;
 using WareSync.API.Mappings;
+using WareSync.API.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +41,7 @@ if (app.Environment.IsDevelopment())
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "WareSync API V1");
     });
 }
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.UseHttpsRedirection();
 app.UseAuthorization();
 app.MapControllers();
