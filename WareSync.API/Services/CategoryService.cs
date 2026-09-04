@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WareSync.API.Data;
 using WareSync.API.DTOs;
@@ -9,21 +10,19 @@ namespace WareSync.API.Services;
 public class CategoryService : ICategoryService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public CategoryService(ApplicationDbContext context)
+    public CategoryService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<CategoryDto>> GetAllAsync()
     {
-        return await _context.Categories
-            .Select(c => new CategoryDto
-            {
-                Id = c.Id,
-                Name = c.Name
-            })
-            .ToListAsync();
+        var categories = await _context.Categories.ToListAsync();
+
+        return _mapper.Map<List<CategoryDto>>(categories);
     }
 
     public async Task<CategoryDto?> GetByIdAsync(int id)
@@ -33,29 +32,18 @@ public class CategoryService : ICategoryService
         if (category == null)
             return null;
 
-        return new CategoryDto
-        {
-            Id = category.Id,
-            Name = category.Name
-        };
+        return _mapper.Map<CategoryDto>(category);
     }
 
     public async Task<CategoryDto> CreateAsync(CreateCategoryDto dto)
     {
-        var category = new Category
-        {
-            Name = dto.Name
-        };
+        var category = _mapper.Map<Category>(dto);
 
         _context.Categories.Add(category);
 
         await _context.SaveChangesAsync();
 
-        return new CategoryDto
-        {
-            Id = category.Id,
-            Name = category.Name
-        };
+        return _mapper.Map<CategoryDto>(category);
     }
 
     public async Task<bool> UpdateAsync(int id, UpdateCategoryDto dto)
@@ -65,7 +53,7 @@ public class CategoryService : ICategoryService
         if (category == null)
             return false;
 
-        category.Name = dto.Name;
+        _mapper.Map(dto, category);
 
         await _context.SaveChangesAsync();
 

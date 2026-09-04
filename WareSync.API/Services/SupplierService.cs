@@ -1,3 +1,4 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using WareSync.API.Data;
 using WareSync.API.DTOs;
@@ -9,23 +10,19 @@ namespace WareSync.API.Services;
 public class SupplierService : ISupplierService
 {
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public SupplierService(ApplicationDbContext context)
+    public SupplierService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
     public async Task<IEnumerable<SupplierDto>> GetAllAsync()
     {
-        return await _context.Suppliers
-            .Select(s => new SupplierDto
-            {
-                Id = s.Id,
-                Name = s.Name,
-                Email = s.Email,
-                Phone = s.Phone
-            })
-            .ToListAsync();
+        var suppliers = await _context.Suppliers.ToListAsync();
+
+        return _mapper.Map<List<SupplierDto>>(suppliers);
     }
 
     public async Task<SupplierDto?> GetByIdAsync(int id)
@@ -35,35 +32,18 @@ public class SupplierService : ISupplierService
         if (supplier == null)
             return null;
 
-        return new SupplierDto
-        {
-            Id = supplier.Id,
-            Name = supplier.Name,
-            Email = supplier.Email,
-            Phone = supplier.Phone
-        };
+        return _mapper.Map<SupplierDto>(supplier);
     }
 
     public async Task<SupplierDto> CreateAsync(CreateSupplierDto dto)
     {
-        var supplier = new Supplier
-        {
-            Name = dto.Name,
-            Email = dto.Email,
-            Phone = dto.Phone
-        };
+        var supplier = _mapper.Map<Supplier>(dto);
 
         _context.Suppliers.Add(supplier);
 
         await _context.SaveChangesAsync();
 
-        return new SupplierDto
-        {
-            Id = supplier.Id,
-            Name = supplier.Name,
-            Email = supplier.Email,
-            Phone = supplier.Phone
-        };
+        return _mapper.Map<SupplierDto>(supplier);
     }
 
     public async Task<bool> UpdateAsync(int id, UpdateSupplierDto dto)
@@ -73,9 +53,7 @@ public class SupplierService : ISupplierService
         if (supplier == null)
             return false;
 
-        supplier.Name = dto.Name;
-        supplier.Email = dto.Email;
-        supplier.Phone = dto.Phone;
+        _mapper.Map(dto, supplier);
 
         await _context.SaveChangesAsync();
 
