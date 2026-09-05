@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WareSync.API.Constants;
 using WareSync.API.DTOs;
 using WareSync.API.Interfaces;
 
@@ -16,12 +18,14 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<CategoryDto>>> GetAll()
     {
         return Ok(await _categoryService.GetAllAsync());
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<ActionResult<CategoryDto>> GetById(int id)
     {
         var category = await _categoryService.GetByIdAsync(id);
@@ -33,6 +37,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Manager}")]
     public async Task<ActionResult<CategoryDto>> Create(CreateCategoryDto dto)
     {
         var category = await _categoryService.CreateAsync(dto);
@@ -41,6 +46,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Manager}")]
     public async Task<IActionResult> Update(int id, UpdateCategoryDto dto)
     {
         var updated = await _categoryService.UpdateAsync(id, dto);
@@ -52,6 +58,7 @@ public class CategoriesController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<IActionResult> Delete(int id)
     {
         var deleted = await _categoryService.DeleteAsync(id);

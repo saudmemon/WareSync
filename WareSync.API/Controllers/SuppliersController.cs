@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using WareSync.API.Constants;
 using WareSync.API.DTOs;
 using WareSync.API.Interfaces;
 
@@ -16,12 +18,14 @@ public class SuppliersController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<ActionResult<IEnumerable<SupplierDto>>> GetAll()
     {
         return Ok(await _supplierService.GetAllAsync());
     }
 
     [HttpGet("{id}")]
+    [Authorize]
     public async Task<ActionResult<SupplierDto>> GetById(int id)
     {
         var supplier = await _supplierService.GetByIdAsync(id);
@@ -33,6 +37,7 @@ public class SuppliersController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Manager}")]
     public async Task<ActionResult<SupplierDto>> Create(CreateSupplierDto dto)
     {
         var supplier = await _supplierService.CreateAsync(dto);
@@ -41,6 +46,7 @@ public class SuppliersController : ControllerBase
     }
 
     [HttpPut("{id}")]
+    [Authorize(Roles = $"{Roles.Admin},{Roles.Manager}")]
     public async Task<IActionResult> Update(int id, UpdateSupplierDto dto)
     {
         var updated = await _supplierService.UpdateAsync(id, dto);
@@ -52,6 +58,7 @@ public class SuppliersController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = Roles.Admin)]
     public async Task<IActionResult> Delete(int id)
     {
         var deleted = await _supplierService.DeleteAsync(id);

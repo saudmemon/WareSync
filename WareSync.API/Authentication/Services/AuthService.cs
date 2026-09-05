@@ -3,8 +3,10 @@ using WareSync.API.Authentication.DTOs;
 using WareSync.API.Authentication.Interfaces;
 using WareSync.API.Authentication.Models;
 using WareSync.API.Repositories.Interfaces;
+using WareSync.API.Constants;
 
 namespace WareSync.API.Authentication.Services;
+
 
 public class AuthService : IAuthService
 {
@@ -31,7 +33,7 @@ public class AuthService : IAuthService
             FullName = dto.FullName,
             Email = dto.Email,
             PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password),
-            Role = "Employee"
+            Role = Roles.Employee
         };
 
         await _userRepository.AddAsync(user);
