@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.Text;
 using WareSync.API.Authentication.Interfaces;
 using WareSync.API.Authentication.Services;
@@ -14,7 +15,20 @@ using WareSync.API.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// --------------------
+// Serilog Configuration
+// --------------------
+builder.Host.UseSerilog((context, services, configuration) =>
+{
+    configuration
+        .ReadFrom.Configuration(context.Configuration)
+        .ReadFrom.Services(services)
+        .Enrich.FromLogContext();
+});
+
+// --------------------
 // JWT Authentication
+// --------------------
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -68,6 +82,9 @@ builder.Services.AddOpenApi();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+// Request Logging
+app.UseSerilogRequestLogging();
 
 if (app.Environment.IsDevelopment())
 {
