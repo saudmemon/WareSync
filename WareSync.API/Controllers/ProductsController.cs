@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WareSync.API.Constants;
 using WareSync.API.DTOs;
+using WareSync.API.DTOs.Queries;
 using WareSync.API.Interfaces;
 
 namespace WareSync.API.Controllers;
@@ -19,9 +20,9 @@ public class ProductsController : ControllerBase
 
     [HttpGet]
     [Authorize]
-    public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll()
+    public async Task<ActionResult<IEnumerable<ProductDto>>> GetAll([FromQuery] ProductQueryParameters query)
     {
-        return Ok(await _productService.GetAllAsync());
+        return Ok(await _productService.GetAllAsync(query));
     }
 
     [HttpGet("{id}")]

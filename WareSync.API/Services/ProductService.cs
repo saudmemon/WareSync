@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using WareSync.API.DTOs;
+using WareSync.API.DTOs.Queries;
 using WareSync.API.Interfaces;
 using WareSync.API.Models;
 using WareSync.API.Repositories.Interfaces;
@@ -17,9 +18,10 @@ public class ProductService : IProductService
         _mapper = mapper;
     }
 
-    public async Task<IEnumerable<ProductDto>> GetAllAsync()
+    public async Task<IEnumerable<ProductDto>> GetAllAsync(ProductQueryParameters query)
     {
-        var products = await _repository.GetAllWithDetailsAsync();
+        var products = await _repository.GetAllAsync(query);
+
         return _mapper.Map<List<ProductDto>>(products);
     }
 

@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="DTOs\" />
     <Folder Include="Helpers\" />
+    <Folder Include="NewFolder1\" />
   </ItemGroup>
 
 </Project>
